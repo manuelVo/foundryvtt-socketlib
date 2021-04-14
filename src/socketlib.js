@@ -234,18 +234,5 @@ function isResponsibleGM() {
 	const connectedGMs = game.users.filter(user => user.isGM && user.active);
 	if (!game.user.isGM)
 		return false;
-	return !connectedGMs.some(other => strIsSmallerThan(other.data._id, game.user.data._id));
-}
-
-function strIsSmallerThan(small, big) {
-	let shortestLength = Math.min(small.length, big.length);
-	for (let i = 0;i < shortestLength;i++) {
-		const smallCode = small.charCodeAt(i);
-		const bigCode = big.charCodeAt(i);
-		if (smallCode < bigCode)
-			return true;
-		if (bigCode < smallCode)
-			return false;
-	}
-	return small.length < shortestLength;
+	return !connectedGMs.some(other => other.data._id < game.user.data._id);
 }

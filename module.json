@@ -4,7 +4,7 @@
 	"description": "A library for easier handling of foundry sockets",
 	"version": "1.0.0",
 	"minimumCoreVersion" : "0.7.9",
-	"compatibleCoreVersion" : "0.7.9",
+	"compatibleCoreVersion" : "0.8.1",
 	"library": true,
 	"authors": [
 		{

@@ -64,6 +64,17 @@ Call `registerModule` to make socketlib listen for sockets that come in for your
 
 **Return value**: A socket instance is returned, that is used for all further interactions with socketlib.
 
+#### socketlib.registerSystem
+```javascript
+registerSystem(systemId);
+```
+
+Call `registerSystem` to make socketlib listen for sockets that come in for your game system. This is the first function in socketlib that your game system should call.
+
+- **systemId** the id of your game system as specified in your game system's manifest.
+
+**Return value**: A socket instance is returned, that is used for all further interactions with socketlib.
+
 #### socket.register
 ```javascript
 socket.register(name, func);

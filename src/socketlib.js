@@ -39,17 +39,32 @@ class Socketlib {
 			console.error(`socketlib | Failed to register socket for module '${moduleName}'. Please set '"socket":true' in your manifset and restart foundry (you need to reload your world - simply reloading your browser won't do).`);
 			return undefined;
 		}
-		const newSocket = new SocketlibSocket(moduleName);
+		const newSocket = new SocketlibSocket(moduleName, "module");
 		this.modules.set(moduleName, newSocket);
+		return newSocket;
+	}
+
+	registerSystem(systemId) {
+		if (game.system.id !== systemId) {
+			console.error(`socketlib | Someone tried to register system '${systemId}', but that system isn't active. As a result the registration request has been ignored.`);
+			return undefined;
+		}
+		const existingSocket = this.system;
+		if (existingSocket)
+			return existingSocket;
+		if (!game.system.data.socket) {
+			console.error(`socketlib | Failed to register socket for system '${systemId}'. Please set '"socket":true' in your manifest and restart foundry (you need to reload your world - simply reloading your browser won't do).`);
+		}
+		const newSocket = new SocketlibSocket(systemId, "system");
+		this.system = newSocket;
 		return newSocket;
 	}
 }
 
 class SocketlibSocket {
-	constructor(moduleName) {
-		this.moduleName = moduleName;
+	constructor(moduleName, moduleType) {
 		this.functions = new Map();
-		this.socketName = `module.${moduleName}`;
+		this.socketName = `${moduleType}.${moduleName}`;
 		this.pendingRequests = new Map();
 		game.socket.on(this.socketName, this._onSocketReceived.bind(this));
 	}

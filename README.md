@@ -117,7 +117,19 @@ Executes a function on the client of the specified user. This function will fail
 async socket.executeForAllGMs(handler, parameters...);
 ```
 
-Executes a function on the clients of all connected GMs.
+Executes a function on the clients of all connected GMs. If the current user is a GM the function will be executed locally as well.
+
+- **handler** can either be the function that should be executed or the name given to that function during registration.
+- **parameters...** the parameters that should be passed to the called function. Pass the parameters in comma separated, as you would do for a regular function call.
+
+**Return value**: The promise returned by this function will resolve as soon as the request for execution has been sent to the connected GM clients and *will not* wait until those clients have finished processing that function. The promise will not yield any return value.
+
+#### socket.executeForOtherGMs
+```javascript
+async socket.executeForOtherGMs(handler, parameters...);
+```
+
+Executes a function on the clients of all connected GMs, except for the current user. If the current user is not a GM this function has the same behavior as [`socket.executeForAllGMs`](#socketexecuteasgm).
 
 - **handler** can either be the function that should be executed or the name given to that function during registration.
 - **parameters...** the parameters that should be passed to the called function. Pass the parameters in comma separated, as you would do for a regular function call.
@@ -129,7 +141,19 @@ Executes a function on the clients of all connected GMs.
 async socket.executeForEveryone(handler, ...args);
 ```
 
-Executes a function on all connected clients.
+Executes a function on all connected clients, including on the local client.
+
+- **handler** can either be the function that should be executed or the name given to that function during registration.
+- **parameters...** the parameters that should be passed to the called function. Pass the parameters in comma separated, as you would do for a regular function call.
+
+**Return value**: The promise returned by this function will resolve as soon as the request for execution has been sent to the connected clients and *will not* wait until those clients have finished processing that function. The promise will not yield any return value.
+
+#### socket.executeForOthers
+```javascript
+async socket.executeForOthers(handler, ...args);
+```
+
+Executes a function on all connected clients, but not locally.
 
 - **handler** can either be the function that should be executed or the name given to that function during registration.
 - **parameters...** the parameters that should be passed to the called function. Pass the parameters in comma separated, as you would do for a regular function call.

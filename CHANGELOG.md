@@ -1,6 +1,10 @@
 ## In development
+### New API endpoints
+- Added `executeForOthers` and `executeForOtherGMs` that execute for all users/all GMs except the local client.
+
 ### Bugfixes
-- `ExecuteAsUser` and `ExecuteForUsers` didn't execute locally if the id of the current user was passed in as recipient.
+- `executeAsUser` and `executeForUsers` didn't execute locally if the id of the current user was passed in as recipient.
+- `executeForEveryone` and `executeForAllGMs` now execute locally as well, as they should
 
 
 ## 1.0.1

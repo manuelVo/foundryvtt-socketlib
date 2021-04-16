@@ -109,9 +109,24 @@ class SocketlibSocket {
 	async executeForAllGMs(handler, ...args) {
 		const [name, func] = this._resolveFunction(handler);
 		this._sendCommand(name, args, RECIPIENT_TYPES.ALL_GMS);
+		if (game.user.isGM)
+			// TODO Make this function call run async, even if the function isn't delcared as async to prevent exceptions to propagate through executeForUsers
+			func(...args);
+	}
+
+	async executeForAllOtherGMs(handler, ...args) {
+		const [name, func] = this._resolveFunction(handler);
+		this._sendCommand(name, args, RECIPIENT_TYPES.ALL_GMS);
 	}
 
 	async executeForEveryone(handler, ...args) {
+		const [name, func] = this._resolveFunction(handler);
+		this._sendCommand(name, args, RECIPIENT_TYPES.EVERYONE);
+		// TODO Make this function call run async, even if the function isn't delcared as async to prevent exceptions to propagate through executeForUsers
+		func(...args);
+	}
+
+	async executeForOthers(handler, ...args) {
 		const [name, func] = this._resolveFunction(handler);
 		this._sendCommand(name, args, RECIPIENT_TYPES.EVERYONE);
 	}

@@ -1,4 +1,4 @@
-## In development
+## 1.0.2
 ### New API endpoints
 - Added `executeForOthers` and `executeForOtherGMs` that execute for all users/all GMs except the local client.
 

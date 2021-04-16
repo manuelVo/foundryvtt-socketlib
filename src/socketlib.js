@@ -114,7 +114,7 @@ class SocketlibSocket {
 			func(...args);
 	}
 
-	async executeForAllOtherGMs(handler, ...args) {
+	async executeForOtherGMs(handler, ...args) {
 		const [name, func] = this._resolveFunction(handler);
 		this._sendCommand(name, args, RECIPIENT_TYPES.ALL_GMS);
 	}

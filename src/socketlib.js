@@ -96,6 +96,8 @@ class SocketlibSocket {
 
 	async executeAsUser(handler, userId, ...args) {
 		const [name, func] = this._resolveFunction(handler);
+		if (userId === game.userId)
+			return func(...args);
 		const user = game.users.get(userId);
 		if (!user)
 			throw new SocketlibInvalidUserError(`No user with id '${userId}' exists.`);
@@ -118,7 +120,13 @@ class SocketlibSocket {
 		if (!(recipients instanceof Array))
 			throw new TypeError("Recipients parameter must be an array of user ids.");
 		const [name, func] = this._resolveFunction(handler);
+		const currentUserIndex = recipients.indexOf(game.userId);
+		if (currentUserIndex >= 0)
+			recipients.splice(currentUserIndex, 1);
 		this._sendCommand(name, args, recipients);
+		if (currentUserIndex >= 0)
+			// TODO Make this function call run async, even if the function isn't delcared as async to prevent exceptions to propagate through executeForUsers
+			func(...args);
 	}
 
 	_sendRequest(handlerName, args, recipient) {

@@ -1,4 +1,4 @@
-## In development
+## 1.0.3
 ### Bugfixes
 - `executeFor` functions will no longer fail with an exception if a function scheduled to be called by the local user throws.
 

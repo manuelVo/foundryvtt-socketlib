@@ -100,9 +100,9 @@ class SocketlibSocket {
 			return func(...args);
 		const user = game.users.get(userId);
 		if (!user)
-			throw new SocketlibInvalidUserError(`No user with id '${userId}' exists.`);
+			throw new errors.SocketlibInvalidUserError(`No user with id '${userId}' exists.`);
 		if (!user.active)
-			throw new SocketlibInvalidUserError(`User '${user.name}' (${userId}) is not connected.`);
+			throw new errors.SocketlibInvalidUserError(`User '${user.name}' (${userId}) is not connected.`);
 		return this._sendRequest(name, args, [userId]);
 	}
 

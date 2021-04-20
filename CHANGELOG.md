@@ -1,3 +1,9 @@
+## In development
+### Bugfixes
+- When an invalid user id is specified socketlib will now throw the correct error message.
+
+
+
 ## 1.0.3
 ### Bugfixes
 - `executeFor` functions will no longer fail with an exception if a function scheduled to be called by the local user throws.

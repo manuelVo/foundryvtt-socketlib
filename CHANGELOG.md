@@ -1,3 +1,8 @@
+## In development
+### Bugfixes
+- `executeFor` functions will no longer fail with an exception if a function scheduled to be called by the local user throws.
+
+
 ## 1.0.2
 ### New API endpoints
 - Added `executeForOthers` and `executeForOtherGMs` that execute for all users/all GMs except the local client.

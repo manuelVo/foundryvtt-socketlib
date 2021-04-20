@@ -109,9 +109,14 @@ class SocketlibSocket {
 	async executeForAllGMs(handler, ...args) {
 		const [name, func] = this._resolveFunction(handler);
 		this._sendCommand(name, args, RECIPIENT_TYPES.ALL_GMS);
-		if (game.user.isGM)
-			// TODO Make this function call run async, even if the function isn't delcared as async to prevent exceptions to propagate through executeForUsers
-			func(...args);
+		if (game.user.isGM) {
+			try {
+				func(...args);
+			}
+			catch (e) {
+				console.error(e);
+			}
+		}
 	}
 
 	async executeForOtherGMs(handler, ...args) {
@@ -122,8 +127,11 @@ class SocketlibSocket {
 	async executeForEveryone(handler, ...args) {
 		const [name, func] = this._resolveFunction(handler);
 		this._sendCommand(name, args, RECIPIENT_TYPES.EVERYONE);
-		// TODO Make this function call run async, even if the function isn't delcared as async to prevent exceptions to propagate through executeForUsers
-		func(...args);
+		try {
+			func(...args);
+		} catch (e) {
+			console.error(e);
+		}
 	}
 
 	async executeForOthers(handler, ...args) {
@@ -139,9 +147,14 @@ class SocketlibSocket {
 		if (currentUserIndex >= 0)
 			recipients.splice(currentUserIndex, 1);
 		this._sendCommand(name, args, recipients);
-		if (currentUserIndex >= 0)
-			// TODO Make this function call run async, even if the function isn't delcared as async to prevent exceptions to propagate through executeForUsers
-			func(...args);
+		if (currentUserIndex >= 0) {
+			try {
+				func(...args);
+			}
+			catch (e) {
+				console.error(e);
+			}
+		}
 	}
 
 	_sendRequest(handlerName, args, recipient) {

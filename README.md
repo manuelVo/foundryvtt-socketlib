@@ -92,7 +92,7 @@ Registers a function that can subsequently be called using socketlib. It's impor
 async socket.executeAsGM(handler, parameters...);
 ```
 
-Executes a function on the client of exactly one GM. If multiple GMs are connected, one of the GMs will be selected to execute the function. This function will fail if there is no GM connected.
+Executes a function on the client of exactly one GM. If multiple GMs are connected, one of the GMs will be selected to execute the function. This function will fail if there is no GM connected. The function must have been registered using [`socket.register`](#socketregister) before it can be invoked via this function.
 
 - **handler** can either be the function that should be executed or the name given to that function during registration.
 - **parameters...** the parameters that should be passed to the called function. Pass the parameters in comma separated, as you would do for a regular function call.
@@ -104,7 +104,7 @@ Executes a function on the client of exactly one GM. If multiple GMs are connect
 async socket.executeAsUser(handler, userId, parameters...);
 ```
 
-Executes a function on the client of the specified user. This function will fail if the specified user is not connected.
+Executes a function on the client of the specified user. This function will fail if the specified user is not connected. The function must have been registered using [`socket.register`](#socketregister) before it can be invoked via this function.
 
 - **handler** can either be the function that should be executed or the name given to that function during registration.
 - **userId** the id of the user that should execute this function.
@@ -117,7 +117,7 @@ Executes a function on the client of the specified user. This function will fail
 async socket.executeForAllGMs(handler, parameters...);
 ```
 
-Executes a function on the clients of all connected GMs. If the current user is a GM the function will be executed locally as well.
+Executes a function on the clients of all connected GMs. If the current user is a GM the function will be executed locally as well. The function must have been registered using [`socket.register`](#socketregister) before it can be invoked via this function.
 
 - **handler** can either be the function that should be executed or the name given to that function during registration.
 - **parameters...** the parameters that should be passed to the called function. Pass the parameters in comma separated, as you would do for a regular function call.
@@ -129,7 +129,7 @@ Executes a function on the clients of all connected GMs. If the current user is 
 async socket.executeForOtherGMs(handler, parameters...);
 ```
 
-Executes a function on the clients of all connected GMs, except for the current user. If the current user is not a GM this function has the same behavior as [`socket.executeForAllGMs`](#socketexecuteasgm).
+Executes a function on the clients of all connected GMs, except for the current user. If the current user is not a GM this function has the same behavior as [`socket.executeForAllGMs`](#socketexecuteasgm). The function must have been registered using [`socket.register`](#socketregister) before it can be invoked via this function.
 
 - **handler** can either be the function that should be executed or the name given to that function during registration.
 - **parameters...** the parameters that should be passed to the called function. Pass the parameters in comma separated, as you would do for a regular function call.
@@ -141,7 +141,7 @@ Executes a function on the clients of all connected GMs, except for the current 
 async socket.executeForEveryone(handler, ...args);
 ```
 
-Executes a function on all connected clients, including on the local client.
+Executes a function on all connected clients, including on the local client. The function must have been registered using [`socket.register`](#socketregister) before it can be invoked via this function.
 
 - **handler** can either be the function that should be executed or the name given to that function during registration.
 - **parameters...** the parameters that should be passed to the called function. Pass the parameters in comma separated, as you would do for a regular function call.
@@ -153,7 +153,7 @@ Executes a function on all connected clients, including on the local client.
 async socket.executeForOthers(handler, ...args);
 ```
 
-Executes a function on all connected clients, but not locally.
+Executes a function on all connected clients, but not locally. The function must have been registered using [`socket.register`](#socketregister) before it can be invoked via this function.
 
 - **handler** can either be the function that should be executed or the name given to that function during registration.
 - **parameters...** the parameters that should be passed to the called function. Pass the parameters in comma separated, as you would do for a regular function call.
@@ -165,7 +165,7 @@ Executes a function on all connected clients, but not locally.
 async executeForUsers(handler, recipients, ...args);
 ```
 
-Executes a function on the clients of a specified list of players.
+Executes a function on the clients of a specified list of players. The function must have been registered using [`socket.register`](#socketregister) before it can be invoked via this function.
 
 - **handler** can either be the function that should be executed or the name given to that function during registration.
 - **recipients** an array of user ids that should execute the function.

@@ -84,7 +84,7 @@ class SocketlibSocket {
 	async executeAsGM(handler, ...args) {
 		const [name, func] = this._resolveFunction(handler);
 		if (game.user.isGM) {
-			return func(...args);
+			return this._executeLocal(func, ...args);
 		}
 		else {
 			if (!game.users.find(user => user.isGM && user.active)) {
@@ -97,7 +97,7 @@ class SocketlibSocket {
 	async executeAsUser(handler, userId, ...args) {
 		const [name, func] = this._resolveFunction(handler);
 		if (userId === game.userId)
-			return func(...args);
+			return this._executeLocal(func, ...args);
 		const user = game.users.get(userId);
 		if (!user)
 			throw new errors.SocketlibInvalidUserError(`No user with id '${userId}' exists.`);
@@ -111,7 +111,7 @@ class SocketlibSocket {
 		this._sendCommand(name, args, RECIPIENT_TYPES.ALL_GMS);
 		if (game.user.isGM) {
 			try {
-				func(...args);
+				this._executeLocal(func, ...args);
 			}
 			catch (e) {
 				console.error(e);
@@ -128,7 +128,7 @@ class SocketlibSocket {
 		const [name, func] = this._resolveFunction(handler);
 		this._sendCommand(name, args, RECIPIENT_TYPES.EVERYONE);
 		try {
-			func(...args);
+			this._executeLocal(func, ...args);
 		} catch (e) {
 			console.error(e);
 		}
@@ -149,7 +149,7 @@ class SocketlibSocket {
 		this._sendCommand(name, args, recipients);
 		if (currentUserIndex >= 0) {
 			try {
-				func(...args);
+				this._executeLocal(func, ...args);
 			}
 			catch (e) {
 				console.error(e);
@@ -185,6 +185,11 @@ class SocketlibSocket {
 		game.socket.emit(this.socketName, message);
 	}
 
+	_executeLocal(func, ...args) {
+		const socketdata = {userId: game.userId};
+		return func.call({socketdata}, ...args);
+	}
+
 	_resolveFunction(func) {
 		if (func instanceof Function) {
 			const entry = Array.from(this.functions.entries()).find(([key, val]) => val === func);
@@ -200,14 +205,14 @@ class SocketlibSocket {
 		}
 	}
 
-	_onSocketReceived(message) {
+	_onSocketReceived(message, senderId) {
 		if (message.type === MESSAGE_TYPES.COMMAND || message.type === MESSAGE_TYPES.REQUEST)
-			this._handleRequest(message);
+			this._handleRequest(message, senderId);
 		else
-			this._handleResponse(message);
+			this._handleResponse(message, senderId);
 	}
 
-	async _handleRequest(message) {
+	async _handleRequest(message, senderId) {
 		const {handlerName, args, recipient, id, type} = message;
 		// Check if we're the recipient of the received message. If not, return early.
 		if (recipient instanceof Array) {
@@ -241,13 +246,15 @@ class SocketlibSocket {
 			}
 			throw e;
 		}
+		const socketdata = {userId: senderId};
+		const _this = {socketdata};
 		if (type === MESSAGE_TYPES.COMMAND) {
-			func(...args);
+			func.call(_this, ...args);
 		}
 		else {
 			let result;
 			try {
-				result = await func(...args);
+				result = await func.call(_this, ...args);
 			}
 			catch (e) {
 				console.error(`An exception occured while executing handler '${name}'.`);
@@ -258,11 +265,12 @@ class SocketlibSocket {
 		}
 	}
 
-	_handleResponse(message) {
+	_handleResponse(message, senderId) {
 		const {id, result, type} = message;
 		const request = this.pendingRequests.get(id);
 		if (!request)
 			return;
+		// TODO Verify if the response comes from the correct sender, discard otherwise
 		switch (type) {
 			case MESSAGE_TYPES.RESULT:
 				request.resolve(result);

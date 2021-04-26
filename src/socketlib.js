@@ -161,7 +161,7 @@ class SocketlibSocket {
 		const message = {handlerName, args, recipient};
 		message.id = randomID();
 		message.type = MESSAGE_TYPES.REQUEST;
-		const promise = new Promise((resolve, reject) => this.pendingRequests.set(message.id, {handlerName, resolve, reject}));
+		const promise = new Promise((resolve, reject) => this.pendingRequests.set(message.id, {handlerName, resolve, reject, recipient}));
 		game.socket.emit(this.socketName, message);
 		return promise;
 	}
@@ -270,7 +270,11 @@ class SocketlibSocket {
 		const request = this.pendingRequests.get(id);
 		if (!request)
 			return;
-		// TODO Verify if the response comes from the correct sender, discard otherwise
+		if (!this._isResponseSenderValid(senderId, request.recipient)) {
+			console.warn("socketlib | Dropped a response that was received from the wrong user. This means that either someone is inserting messages into the socket or this is a socketlib issue. If the latter is the case please file a bug report in the socketlib repository.")
+			console.info(senderId, request.recipient);
+			return;
+		}
 		switch (type) {
 			case MESSAGE_TYPES.RESULT:
 				request.resolve(result);
@@ -286,6 +290,14 @@ class SocketlibSocket {
 				break;
 		}
 		this.pendingRequests.delete(id);
+	}
+
+	_isResponseSenderValid(senderId, recipients) {
+		if (recipients === RECIPIENT_TYPES.ONE_GM && game.users.get(senderId).isGM)
+			return true;
+		if (recipients instanceof Array && recipients.includes(senderId))
+			return true;
+		return false;
 	}
 }
 

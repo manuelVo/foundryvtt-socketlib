@@ -300,8 +300,8 @@ class SocketlibSocket {
 }
 
 function isResponsibleGM() {
-	const connectedGMs = game.users.filter(user => user.isGM && user.active);
 	if (!game.user.isGM)
 		return false;
+	const connectedGMs = game.users.filter(user => user.isGM && user.active);
 	return !connectedGMs.some(other => other.data._id < game.user.data._id);
 }

@@ -1,6 +1,7 @@
 ## In development
 ### New features
 - The `this` value of functions now contains the id of the user that triggered the function execution.
+- Some network packets are now more efficient.
 
 ### Bugfixes
 - When an invalid user id is specified socketlib will now throw the correct error message.

@@ -168,7 +168,6 @@ class SocketlibSocket {
 
 	_sendCommand(handlerName, args, recipient) {
 		const message = {handlerName, args, recipient};
-		message.id = randomID();
 		message.type = MESSAGE_TYPES.COMMAND;
 		game.socket.emit(this.socketName, message);
 	}
@@ -241,7 +240,7 @@ class SocketlibSocket {
 			[name, func] = this._resolveFunction(handlerName);
 		}
 		catch (e) {
-			if (e instanceof errors.SocketlibUnregisteredHandlerError) {
+			if (e instanceof errors.SocketlibUnregisteredHandlerError && type === MESSAGE_TYPES.REQUEST) {
 				this._sendError(id, MESSAGE_TYPES.UNREGISTERED);
 			}
 			throw e;
@@ -258,7 +257,6 @@ class SocketlibSocket {
 			}
 			catch (e) {
 				console.error(`An exception occured while executing handler '${name}'.`);
-				this._sendError(id, MESSAGE_TYPES.EXCEPTION);
 				throw e;
 			}
 			this._sendResult(id, result);

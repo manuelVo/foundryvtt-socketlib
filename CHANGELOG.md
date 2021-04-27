@@ -1,4 +1,4 @@
-## In development
+## 1.0.4
 ### New features
 - The `this` value of functions now contains the id of the user that triggered the function execution.
 - Some network packets are now more efficient.

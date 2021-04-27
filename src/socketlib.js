@@ -258,6 +258,7 @@ class SocketlibSocket {
 			}
 			catch (e) {
 				console.error(`An exception occured while executing handler '${name}'.`);
+				this._sendError(id, MESSAGE_TYPES.EXCEPTION);
 				throw e;
 			}
 			this._sendResult(id, result);

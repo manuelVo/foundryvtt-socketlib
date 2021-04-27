@@ -23,6 +23,7 @@ Hooks.once("init", () => {
 class Socketlib {
 	constructor() {
 		this.modules = new Map();
+		this.system = undefined;
 		this.errors = errors;
 	}
 

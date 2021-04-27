@@ -1,3 +1,4 @@
+import {libWrapper} from "./libwrapper_shim.js";
 import * as errors from "./errors.js";
 
 const RECIPIENT_TYPES = {
@@ -17,8 +18,9 @@ const MESSAGE_TYPES = {
 
 Hooks.once("init", () => {
 	window.socketlib = new Socketlib();
+	libWrapper.register("socketlib", "Users.prototype.constructor._handleUserActivity", handleUserActivity);
 	Hooks.callAll("socketlib.ready");
-});
+}, "WRAPPER");
 
 class Socketlib {
 	constructor() {
@@ -88,7 +90,7 @@ class SocketlibSocket {
 			return this._executeLocal(func, ...args);
 		}
 		else {
-			if (!game.users.find(user => user.isGM && user.active)) {
+			if (!game.users.find(isActiveGM)) {
 				throw new errors.SocketlibNoGMConnectedError(`Could not execute handler '${name}' (${func.name}) as GM, because no GM is connected.`);
 			}
 			return this._sendRequest(name, args, RECIPIENT_TYPES.ONE_GM);
@@ -304,6 +306,48 @@ class SocketlibSocket {
 function isResponsibleGM() {
 	if (!game.user.isGM)
 		return false;
-	const connectedGMs = game.users.filter(user => user.isGM && user.active);
+	const connectedGMs = game.users.filter(isActiveGM);
 	return !connectedGMs.some(other => other.data._id < game.user.data._id);
+}
+
+function isActiveGM(user) {
+	return user.active && user.isGM;
+}
+
+function handleUserActivity(wrapper, userId, activityData={}) {
+	const user = game.users.get(userId);
+	const wasActive = user.active;
+	const result = wrapper(userId, activityData);
+
+	// If user disconnected
+	if (!user.active && wasActive) {
+		const modules = Array.from(socketlib.modules.values());
+		if (socketlib.system)
+			modules.concat(socketlib.system);
+		const GMConnected = Boolean(game.users.find(isActiveGM));
+		// Reject all promises that are still waiting for a response from this player
+		for (const socket of modules) {
+			const failedRequests = Array.from(socket.pendingRequests.entries()).filter(([id, request]) => {
+				const recipient = request.recipient;
+				const handlerName = request.handlerName;
+				if (recipient === RECIPIENT_TYPES.ONE_GM) {
+					if (!GMConnected) {
+						request.reject(new errors.SocketlibNoGMConnectedError(`Could not execute handler '${handlerName}' as GM, because all GMs disconnected while the execution was being dispatched.`));
+						return true;
+					}
+				}
+				else if (recipient instanceof Array) {
+					if (recipient.includes(userId)) {
+						request.reject(new errors.SocketlibInvalidUserError(`User '${game.users.get(userId).name}' (${userId}) disconnected while handler '${handlerName}' was being dispatched.`));
+						return true;
+					}
+				}
+				return false;
+			});
+			for (const [id, request] of failedRequests) {
+				socket.pendingRequests.delete(id);
+			}
+		}
+	}
+	return result;
 }

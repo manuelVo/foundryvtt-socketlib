@@ -5,6 +5,7 @@
 
 ### Bugfixes
 - When an invalid user id is specified socketlib will now throw the correct error message.
+- When a player disconnects the moment an execution has been scheduled for their client the execution function will now throw an exception, as it would if the player hadn't been connected in the first place. Previously the execution would just silently fail and the promise never resolve in such cases.
 
 
 ## 1.0.3

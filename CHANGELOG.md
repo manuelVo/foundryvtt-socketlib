@@ -1,3 +1,8 @@
+## 1.0.5
+### Compatibility
+- Add support for Foundry 0.8.2
+
+
 ## 1.0.4
 ### New features
 - The `this` value of functions now contains the id of the user that triggered the function execution.

@@ -1,3 +1,8 @@
+## 1.0.10
+### Compatibility
+- Verified compatibility with Foundry 9
+
+
 ## 1.0.9
 ### Compatibility
 - Verified compatibility with Foundry 0.8.9

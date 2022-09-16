@@ -307,7 +307,7 @@ function isResponsibleGM() {
 	if (!game.user.isGM)
 		return false;
 	const connectedGMs = game.users.filter(isActiveGM);
-	return !connectedGMs.some(other => other.data._id < game.user.data._id);
+	return !connectedGMs.some(other => other.id < game.user.id);
 }
 
 function isActiveGM(user) {

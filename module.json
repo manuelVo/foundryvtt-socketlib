@@ -1,10 +1,12 @@
 {
-	"name": "socketlib",
+	"id": "socketlib",
 	"title": "socketlib",
 	"description": "A library for easier handling of foundry sockets",
 	"version": "1.0.10",
-	"minimumCoreVersion" : "0.7.9",
-	"compatibleCoreVersion" : "9",
+	"compatibility": {
+		"minimum": "10",
+		"verified": "10"
+	},
 	"library": true,
 	"authors": [
 		{

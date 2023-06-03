@@ -5,14 +5,15 @@
 	"version": "1.0.12",
 	"compatibility": {
 		"minimum": "10",
-		"verified": "10"
+		"verified": "11"
 	},
 	"library": true,
 	"authors": [
 		{
 			"name": "Manuel Vögele",
 			"email": "develop@manuel-voegele.de",
-			"discord": "Stäbchenfisch#5107"
+			"discord": "Stäbchenfisch#5107",
+			"flags": {}
 		}
 	],
 	"esmodules": [
@@ -24,6 +25,5 @@
 	"manifest": "https://raw.githubusercontent.com/manuelVo/foundryvtt-socketlib/master/module.json",
 	"readme": "https://github.com/manuelVo/foundryvtt-socketlib/blob/master/README.md",
 	"changelog": "https://github.com/manuelVo/foundryvtt-socketlib/blob/master/CHANGELOG.md",
-	"bugs": "https://github.com/manuelVo/foundryvtt-socketlib/issues",
-	"allowBugReporter": false
+	"bugs": "https://github.com/manuelVo/foundryvtt-socketlib/issues"
 }

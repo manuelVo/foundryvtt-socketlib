@@ -176,3 +176,19 @@ Executes a function on the clients of a specified list of players. The function 
 - **parameters...** the parameters that should be passed to the called function. Pass the parameters in comma separated, as you would do for a regular function call.
 
 **Return value**: The promise returned by this function will resolve as soon as the request for execution has been sent to the specified clients and *will not* wait until those clients have finished processing that function. The promise will not yield any return value.
+
+## Your Module Manifest
+
+Socketlib can be set to be required by your module by including the following in your manifest:
+
+```json
+"relationships": {
+  "requires": [
+    {
+      "id": "socketlib",
+      "type": "module",
+      "manifest": "https://github.com/farling42/foundryvtt-socketlib/releases/latest/download/module.json"
+    }
+  ]
+}
+```

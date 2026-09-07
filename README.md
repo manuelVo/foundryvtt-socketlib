@@ -179,6 +179,11 @@ Executes a function on the clients of a specified list of players. The function 
 
 ## Your Module Manifest
 
+Your module should have the socket flag set to true in your manifest:
+```
+socket: true
+```
+
 Socketlib can be set to be required by your module by including the following in your manifest:
 
 ```json
